@@ -22,7 +22,7 @@ function varargout = GUI(varargin)
 
 % Edit the above text to modify the response to help GUI
 
-% Last Modified by GUIDE v2.5 08-Dec-2015 14:28:34
+% Last Modified by GUIDE v2.5 16-Dec-2015 09:38:09
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -72,7 +72,7 @@ function varargout = GUI_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
-%IMPORT VIDEO BUTTON
+
 % --- Executes on button press in pushbutton1.
 function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
@@ -93,7 +93,7 @@ image(readFrame(vid));
 
 
 
-%START PROCESSING BUTTON
+
 % --- Executes on button press in pushbutton2.
 function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
@@ -111,8 +111,13 @@ while hasFrame(vid)
     %Read frame
     frame = readFrame(vid);
     
+    res = processImage(frame);
+    
     %Display frame in axes1
     set(h1, 'CData', frame)
+    
+    %Display the amount of fruits
+    set(handles.listbox1, 'String', {'green apple: ' res(2); 'red apple: ' res(1); 'orange: ' res(3)})
 
 end
 
