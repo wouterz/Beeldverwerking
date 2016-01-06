@@ -2,7 +2,7 @@ function [ er2 ] = Sobel( frame )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 gray = 0.114*frame(:,:,1) + 0.587*frame(:,:,2) + 0.299*frame(:,:,3);
-imagesc(
+
 SEvert = strel('line', 3, 90);
 SEhor = strel('line', 3, 0);
 SEd = strel('diamond', 3);
@@ -16,4 +16,3 @@ er = imerode(border, SEd);
 er2 = imerode(er, SEd);
 
 end
-

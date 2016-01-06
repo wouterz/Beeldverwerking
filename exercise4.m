@@ -1,35 +1,35 @@
-function varargout = GUI(varargin)
-% GUI MATLAB code for GUI.fig
-%      GUI, by itself, creates a new GUI or raises the existing
+function varargout = exercise4(varargin)
+% EXERCISE4 MATLAB code for exercise4.fig
+%      EXERCIuSE3, by itself, creates a new EXERCISE4 or raises the existing
 %      singleton*.
 %
-%      H = GUI returns the handle to a new GUI or the handle to
+%      H = EXERCISE4 returns the handle to a new EXERCISE4 or the handle to
 %      the existing singleton*.
 %
-%      GUI('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in GUI.M with the given input arguments.
+%      EXERCISE4('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in EXERCISE4.M with the given input arguments.
 %
-%      GUI('Property','Value',...) creates a new GUI or raises the
+%      EXERCISE4('Property','Value',...) creates a new EXERCISE4 or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before GUI_OpeningFcn gets called.  An
+%      applied to the GUI before exercise4_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to GUI_OpeningFcn via varargin.
+%      stop.  All inputs are passed to exercise4_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help GUI
+% Edit the above text to modify the response to help exercise4
 
-% Last Modified by GUIDE v2.5 16-Dec-2015 09:38:09
+% Last Modified by GUIDE v2.5 23-Nov-2015 22:56:32
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @GUI_OpeningFcn, ...
-                   'gui_OutputFcn',  @GUI_OutputFcn, ...
+                   'gui_OpeningFcn', @exercise4_OpeningFcn, ...
+                   'gui_OutputFcn',  @exercise4_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -44,26 +44,28 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before GUI is made visible.
-function GUI_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before exercise4 is made visible.
+function exercise4_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to GUI (see VARARGIN)
+% varargin   command line arguments to exercise4 (see VARARGIN)
 
-% Choose default command line output for GUI
+% Choose default command line output for exercise4
 handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes GUI wait for user response (see UIRESUME)
+% UIWAIT makes exercise4 wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
+guidata(hObject,handles);
+
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = GUI_OutputFcn(hObject, eventdata, handles) 
+function varargout = exercise4_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -72,74 +74,78 @@ function varargout = GUI_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
-
+%Stop Button
 % --- Executes on button press in pushbutton1.
 function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-%Read file
-file = uigetfile('*.avi');
-vid = VideoReader(file);
-
-%Make vid accesable
-handles.vid = vid;
-guidata(hObject,handles)
-
-%Initialize axes1
-axes(handles.axes1);
-image(readFrame(vid));
 
 
-
-
+%Start Button
 % --- Executes on button press in pushbutton2.
 function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+%Read file from ui
+%file = uigetfile;
+file = 'Trainingsvideo.avi';
+vid = VideoReader(file);
+
+%Initialize axes1
+axes(handles.axes1);
+image(read(vid, 1));
+
+%Initialize axes2
+axes(handles.axes2);
+image(read(vid, 1));
+
+%Re-instantiate vid for using hasFrame after read
+vid = VideoReader(file);
+
 %Get handles
 h1 = get(handles.axes1, 'Children');
-
-%Get vid
-vid = handles.vid;
+h2 = get(handles.axes2, 'Children');
 
 while hasFrame(vid)
 
     %Read frame
     frame = readFrame(vid);
     
-    res = processImage(frame);
-    
     %Display frame in axes1
     set(h1, 'CData', frame)
     
-    %Display the amount of fruits
-    set(handles.listbox1, 'String', {'green apple: ' res(2); 'red apple: ' res(1); 'orange: ' res(3)})
+   % mask = SobelTest(frame)*255;
+    
+    %Convert frame to dipimage
+    maskG = frame(:, :, 1) > 30 + frame(:, :, 2);
+    maskR = frame(:, :, 1) < 60 + frame(:, :, 2);
+%     maskI = frame(:, :, 1)+frame(:,:,2)+frame(:,:,3) < 300;
+%     maskG2 = frame(:, :, 2) ./ frame(:, :, 1) > 0.8; 
+    
+    mask = bitand(maskG, maskR);
+    mask = mask.*255;
+    
+    %Display frame in axes2
+    set(h2, 'CData', mask)
+    
+    % pause(0.1);
 
 end
 
 
-% --- Executes on selection change in listbox1.
-function listbox1_Callback(hObject, eventdata, handles)
-% hObject    handle to listbox1 (see GCBO)
+
+% --- Executes when user attempts to close figure1.
+function figure1_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns listbox1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from listbox1
-
-
-% --- Executes during object creation, after setting all properties.
-function listbox1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to listbox1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: listbox controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
+% Hint: delete(hObject) closes the figure
+%if(strcmp(handles.vid.Loggings, 'off'))
+%    stop(handles.vid);
+%end
+delete(hObject);
