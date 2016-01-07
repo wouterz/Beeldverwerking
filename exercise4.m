@@ -118,7 +118,8 @@ while hasFrame(vid)
     %Display frame in axes1
     set(h1, 'CData', frame)
     
-   % mask = SobelTest(frame)*255;
+    mask = SobelTest(frame);
+    
     
     %Convert frame to dipimage
     maskG = frame(:, :, 1) > 30 + frame(:, :, 2);
@@ -126,11 +127,19 @@ while hasFrame(vid)
 %     maskI = frame(:, :, 1)+frame(:,:,2)+frame(:,:,3) < 300;
 %     maskG2 = frame(:, :, 2) ./ frame(:, :, 1) > 0.8; 
     
-    mask = bitand(maskG, maskR);
-    mask = mask.*255;
+    %mask = bitand(maskG, maskR);
+  % mask = mask.*255;
+  
+    %grootste object in RGB terug halen
+    object = bwpropfilt(mask,'Area', 1, 'largest');
+    object3D = repmat(object, [1,1,3]);
+    frameDouble = im2double(frame);
+    plate = object3D .* frameDouble;
+
+   % readPlate(plate)
     
     %Display frame in axes2
-    set(h2, 'CData', mask)
+    set(h2, 'CData', plate)
     
     % pause(0.1);
 
