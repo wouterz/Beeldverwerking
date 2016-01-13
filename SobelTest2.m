@@ -1,4 +1,4 @@
-function [ res ] = SobelTest( frame )
+function [ er2 ] = SobelTest2( frame )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 %gray = 0.114*frame(:,:,1) + 0.587*frame(:,:,2) + 0.299*frame(:,:,3);
@@ -67,19 +67,19 @@ area = measure(c,gray,{'size'},[],Inf,0,0);
 res = gray&0;
 
 %loop through the data
-n = length(per);
-for i=1:1:n
-    %If the perimeter is below the threshold
-    if(double(per(i))/double(area(i)) < 0.1)
-        mm = gray&0 | c == i;
-        bb = getfield(regionprops(double(mm), 'BoundingBox'), 'BoundingBox');
-        
-        if(double(area(i))/ (bb(2)*bb(3)) < 0.7)
-            %Add the object to te result
-            res = res | c == i;
-        end
-    end
-end
+% n = length(per);
+% for i=1:1:n
+%     %If the perimeter is below the threshold
+%     if(double(per(i))/double(area(i)) < 0.1)
+% %         mm = gray&0 | c == i;
+% %         bb = getfield(regionprops(double(mm), 'BoundingBox'), 'BoundingBox');
+% %         
+% %         if(double(area(i))/ (bb(2)*bb(3)) < 0.7)
+%             %Add the object to te result
+%             res = res | c == i;
+% %         end
+%     end
+% end
 
 % er = c(border, SEd);
 % er2 = imerode(er, SEd);

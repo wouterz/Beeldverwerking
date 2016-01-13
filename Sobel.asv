@@ -1,4 +1,4 @@
-function [res] = Sobel( frame )
+function [plate] = Sobel( frame )
 
 %make grayscale image
 gray = rgb2gray(frame);
@@ -62,6 +62,6 @@ for i=1:1:n
     end
 end
 
-res = imdilate(double(res), SEd);
+%plate = frame | res == 1;
 
 end

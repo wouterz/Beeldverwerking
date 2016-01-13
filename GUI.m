@@ -111,7 +111,8 @@ while hasFrame(vid)
     %Read frame
     frame = readFrame(vid);
     
-    res = processImage(frame);
+    %create binary image of the plate
+    bplate = Sobel(frame);
     
     %Display frame in axes1
     set(h1, 'CData', frame)
