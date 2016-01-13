@@ -109,7 +109,7 @@ vid = VideoReader(file);
 %Get handles
 h1 = get(handles.axes1, 'Children');
 h2 = get(handles.axes2, 'Children');
-
+characters = getRefChars();
 while hasFrame(vid)
 
     %Read frame
@@ -136,7 +136,7 @@ while hasFrame(vid)
     frameDouble = im2double(frame);
     plate = object3D .* frameDouble;
 
-   % readPlate(plate)
+    readPlate(plate, characters)
     
     %Display frame in axes2
     set(h2, 'CData', plate)
