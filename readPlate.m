@@ -6,7 +6,7 @@ function [ plate_text ] = readPlate( plate, characters )
 threshold = 0.4;
 %threshold = graythresh(plate);
 image = ~im2bw(plate, threshold);
-%image = bwareaopen(image,30);
+image = bwareaopen(image,10);
 %imagesc(image)
 %pause(1);
 
@@ -20,37 +20,79 @@ image = ~im2bw(plate, threshold);
 plate_text = [];
 %amount of letters (connected components) normally 6/8
 [L CC] = bwlabel(image);
+imagesc(L);
+%pause(10);
 
 % if CC < 6 (8 met dashes) fail sws
 % if (CC < 8)
 %     CC = 0;
 % end
 
+minr = [];
+maxr = [];
+for n=2:CC
+    %get nonzero rows and col (non zero have chars)
+    [r,c] = find(L==n);
+    % get char
+    minr = [minr min(r)];
+    maxr = [maxr max(r)];
+end
+min_r = ceil(median(minr));
+max_r = ceil(median(maxr));
+
+
 for n=1:CC
     %get nonzero rows and col (non zero have chars)
     [r,c] = find(L==n);
     % get char
-    letter=image(min(r):max(r),min(c):max(c));
-    %         imshow(letter);
-    %         pause(2);
+    if (min(r) < min_r)
+        minr = min(r);
+    else
+        minr = min_r;
+    end
+    if (max(r) > max_r)
+        maxr = max(r);
+    else
+        maxr = max_r;
+    end
+    minr;
+    maxr;
+%     [minr min(r)]
+%     [maxr max(r)]
+    if (n == 4)
+        [minr maxr min(c) max(c)]
+    end
+    letter=image(minr:maxr,min(c):max(c));
+    
     % make same size as reference letter
     letter_resize=imresize(letter,[42 24]);
-    
+    %imshow(letter);
+    %pause(2);
     % letter/number image to text
     comp = zeros(1, 32);
     for c=1:32
         
         compareLetter = characters(:,:,c);
-        %imshow(compareLetter)
-        %pause(0.5);
+        
+        if ((n == 7 ) && c == 32)
+%             figure
+%             imshow(letter_resize)
+%             figure;
+%             imshow(compareLetter)
+%             pause(10);
+        end
         cor = corr2(compareLetter,letter_resize);
         %c = max(cor(:));
+%         if (c == 32)
+%             cor
+%         end
+        
         comp(c) = cor;
     end
     %index of max value
     [Y, c] = max(comp);
     
-    % if (Y > 0)
+     if (Y > 0.3)
     if c==1
         letter_t='B';
     elseif c==2
@@ -119,7 +161,7 @@ for n=1:CC
     end
     % add letter
     plate_text = [plate_text, letter_t];
-    %end
+    end
 end
 
 end
