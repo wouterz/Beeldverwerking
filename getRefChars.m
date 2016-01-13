@@ -1,32 +1,33 @@
 function [ characters ] = getRefChars( )
 %UNTITLED get matrix of all chars that occur in license plates
 %   read and save all images in a matrix, return matrix
-
+folder = 'font';
 
 %characters
-%A=imread('characters\A.bmp');
-B=imread('characters\B.bmp');
-C=imread('characters\C.bmp');D=imread('characters\D.bmp');
-%E=imread('characters\E.bmp');
-F=imread('characters\F.bmp');
-G=imread('characters\G.bmp');H=imread('characters\H.bmp');
-%I=imread('characters\I.bmp');
-J=imread('characters\J.bmp');
-K=imread('characters\K.bmp');L=imread('characters\L.bmp');
-M=imread('characters\M.bmp');N=imread('characters\N.bmp');
-%O=imread('characters\O.bmp');
-P=imread('characters\P.bmp');
-Q=imread('characters\Q.bmp');R=imread('characters\R.bmp');
-S=imread('characters\S.bmp');T=imread('characters\T.bmp');
-%U=imread('characters\U.bmp');
-V=imread('characters\V.bmp');
-W=imread('characters\W.bmp');X=imread('characters\X.bmp');
-Y=imread('characters\Y.bmp');Z=imread('characters\Z.bmp');
-one=imread('characters\1.bmp');  two=imread('characters\2.bmp');
-three=imread('characters\3.bmp');four=imread('characters\4.bmp');
-five=imread('characters\5.bmp'); six=imread('characters\6.bmp');
-seven=imread('characters\7.bmp');eight=imread('characters\8.bmp');
-nine=imread('characters\9.bmp'); zero=imread('characters\0.bmp');
+%A=imread([folder '\A.bmp']);
+B=imread([folder '\B.bmp']);
+C=imread([folder '\C.bmp']);D=imread([folder '\D.bmp']);
+%E=imread([folder '\E.bmp']);
+F=imread([folder '\F.bmp']);
+G=imread([folder '\G.bmp']);H=imread([folder '\H.bmp']);
+%I=imread([folder '\I.bmp']);
+J=imread([folder '\J.bmp']);
+K=imread([folder '\K.bmp']);L=imread([folder '\L.bmp']);
+M=imread([folder '\M.bmp']);N=imread([folder '\N.bmp']);
+%O=imread([folder '\O.bmp']);
+P=imread([folder '\P.bmp']);
+Q=imread([folder '\Q.bmp']);R=imread([folder '\R.bmp']);
+S=imread([folder '\S.bmp']);T=imread([folder '\T.bmp']);
+%U=imread([folder '\U.bmp']);
+V=imread([folder '\V.bmp']);
+W=imread([folder '\W.bmp']);X=imread([folder '\X.bmp']);
+Y=imread([folder '\Y.bmp']);Z=imread([folder '\Z.bmp']);
+one=imread([folder '\1.bmp']);  two=imread([folder '\2.bmp']);
+three=imread([folder '\3.bmp']);four=imread([folder '\4.bmp']);
+five=imread([folder '\5.bmp']); six=imread([folder '\6.bmp']);
+seven=imread([folder '\7.bmp']);eight=imread([folder '\8.bmp']);
+nine=imread([folder '\9.bmp']); zero=imread([folder '\0.bmp']);
+
 %dash = imread('characters\dash');
 dash = ones(42,24);
 dash(1,:) = 0;
