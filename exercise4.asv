@@ -109,7 +109,7 @@ vid = VideoReader(file);
 %Get handles
 h1 = get(handles.axes1, 'Children');
 h2 = get(handles.axes2, 'Children');
-characters = getRefChars();
+
 while hasFrame(vid)
 
     %Read frame
@@ -118,20 +118,15 @@ while hasFrame(vid)
     %Display frame in axes1
     set(h1, 'CData', frame)
     
-    mask = Sobel(frame);
+    mask = SobelTest(frame);
   
     %grootste object in RGB terug halen
-   % object = bwpropfilt(mask,'Area', 1, 'largest');
-   
-    object3D = repmat(mask, [1,1,3]);
+    object = bwpropfilt(mask,'Area', 1, 'largest');
+    object3D = repmat(object, [1,1,3]);
     frameDouble = im2double(frame);
     plate = object3D .* frameDouble;
 
-<<<<<<< HEAD
-    readPlate(plate, characters)
-=======
-    readPlate(plate)
->>>>>>> df387b7a5b3ff0424053e64df0f2b6e2e49a5247
+   % readPlate(plate)
     
     %Display frame in axes2
     set(h2, 'CData', plate)
