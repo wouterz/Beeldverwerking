@@ -127,7 +127,7 @@ while hasFrame(vid)
     frameDouble = im2double(frame);
     plate = object3D .* frameDouble;
 
-    readPlate(plate)
+   % readPlate(plate)
     
     %Display frame in axes2
     set(h2, 'CData', plate)
