@@ -6,7 +6,7 @@ function [ plate_text ] = readPlate( plate, characters )
 threshold = 0.4;
 %threshold = graythresh(plate);
 image = ~im2bw(plate, threshold);
-image = bwareaopen(image,10);
+%image = bwareaopen(image,10);
 %imagesc(image)
 %pause(1);
 
@@ -20,13 +20,14 @@ image = bwareaopen(image,10);
 plate_text = [];
 %amount of letters (connected components) normally 6/8
 [L CC] = bwlabel(image);
-imagesc(L);
+%imagesc(L);
 %pause(10);
 
 % if CC < 6 (8 met dashes) fail sws
-% if (CC < 8)
-%     CC = 0;
-% end
+CC
+if (CC < 8)
+    CC
+end
 
 minr = [];
 maxr = [];
@@ -55,32 +56,18 @@ for n=1:CC
     else
         maxr = max_r;
     end
-    minr;
-    maxr;
-%     [minr min(r)]
-%     [maxr max(r)]
-    if (n == 4)
-        [minr maxr min(c) max(c)]
-    end
+    
     letter=image(minr:maxr,min(c):max(c));
     
     % make same size as reference letter
     letter_resize=imresize(letter,[42 24]);
-    %imshow(letter);
-    %pause(2);
+    imshow(letter);
+    pause(0.5);
     % letter/number image to text
     comp = zeros(1, 32);
     for c=1:32
         
         compareLetter = characters(:,:,c);
-        
-        if ((n == 7 ) && c == 32)
-%             figure
-%             imshow(letter_resize)
-%             figure;
-%             imshow(compareLetter)
-%             pause(10);
-        end
         cor = corr2(compareLetter,letter_resize);
         %c = max(cor(:));
 %         if (c == 32)
