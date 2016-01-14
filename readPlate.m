@@ -3,18 +3,19 @@ function [ plate_text ] = readPlate( plate, characters )
 
 %imagesc(plate)
 %TODO: threshold tweaken
-threshold = 0.4;
-%threshold = graythresh(plate);
+%threshold = 0.4;
+threshold = graythresh(plate)+0.1;
 image = ~im2bw(plate, threshold);
-%image = bwareaopen(image,10);
-%imagesc(image)
-%pause(1);
+image = imclearborder(image);
+image = bwareaopen(image,10);
+imshow(image)
+pause(1);
 
 %clip empty space around plate
-%[f c]=find(image);
-%image=image(min(f):max(f),min(c):max(c));
-% figure;
-% imagesc(image)
+[f c]=find(image);
+image=image(min(f):max(f),min(c):max(c));
+figure;
+imshow(image)
 
 %storage for plate
 plate_text = [];
@@ -60,13 +61,13 @@ for n=1:CC
     
     % make same size as reference letter
     letter_resize=imresize(letter,[51 62]);
-    figure;
-    imshow(letter_resize);
+    %figure;
+    %imshow(letter_resize);
 %     pause(0.5);
     % letter/number image to text
     comp = zeros(1, 32);
     for c=1:32
-        compareLetter = characters(:,:,c);
+        compareLetter = characters{1, c};
         cor = corr2(compareLetter,letter_resize);
         comp(c) = cor;
     end
@@ -145,8 +146,9 @@ for n=1:CC
     end
 end
 
-end
 if (length(plate_text) ~= 8)
    return
+end
+
 end
 
