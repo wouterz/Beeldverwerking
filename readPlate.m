@@ -24,9 +24,8 @@ plate_text = [];
 %pause(10);
 
 % if CC < 6 (8 met dashes) fail sws
-CC
 if (CC < 8)
-    CC
+    return
 end
 
 minr = [];
@@ -60,20 +59,15 @@ for n=1:CC
     letter=image(minr:maxr,min(c):max(c));
     
     % make same size as reference letter
-    letter_resize=imresize(letter,[42 24]);
-    imshow(letter);
-    pause(0.5);
+    letter_resize=imresize(letter,[51 62]);
+    figure;
+    imshow(letter_resize);
+%     pause(0.5);
     % letter/number image to text
     comp = zeros(1, 32);
     for c=1:32
-        
         compareLetter = characters(:,:,c);
         cor = corr2(compareLetter,letter_resize);
-        %c = max(cor(:));
-%         if (c == 32)
-%             cor
-%         end
-        
         comp(c) = cor;
     end
     %index of max value
@@ -152,7 +146,7 @@ for n=1:CC
 end
 
 end
-%if (length(plate_text) ~= 6)
-%    plate_text = [];
-%end
+if (length(plate_text) ~= 8)
+   return
+end
 

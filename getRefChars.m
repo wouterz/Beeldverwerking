@@ -1,7 +1,7 @@
 function [ characters ] = getRefChars( )
 %UNTITLED get matrix of all chars that occur in license plates
 %   read and save all images in a matrix, return matrix
-folder = 'characters';
+folder = 'font';
 
 %characters
 %A=imread([folder '\A.bmp']);
@@ -27,11 +27,11 @@ three=imread([folder '\3.bmp']);four=imread([folder '\4.bmp']);
 five=imread([folder '\5.bmp']); six=imread([folder '\6.bmp']);
 seven=imread([folder '\7.bmp']);eight=imread([folder '\8.bmp']);
 nine=imread([folder '\9.bmp']); zero=imread([folder '\0.bmp']);
-dash = imread('characters\dash');
+dash = imread([folder '\dash2.bmp']);
 % dash = ones(42,24);
 % dash(1,:) = 0;
 % dash(42,:) = 0;
-characters = zeros(42,24,32);
+characters = zeros(51,62,32);
 %characters(:,:,1) = A;
 characters(:,:,1) = B; characters(:,:,2) = C;
 characters(:,:,3) = D;% characters(:,:,5) = E;
