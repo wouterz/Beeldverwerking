@@ -3,19 +3,19 @@ function [ plate_text ] = readPlate( plate, characters )
 
 %imagesc(plate)
 %TODO: threshold tweaken
-%threshold = 0.4;
+%by trial and error currently 0.5 works okay-ish, dashes still suck
 threshold = graythresh(plate)+0.1;
-image = ~im2bw(plate, threshold);
+image = ~im2bw(plate, 0.5);
 image = imclearborder(image);
 image = bwareaopen(image,10);
-imshow(image)
-pause(1);
+%imshow(image)
+%pause(5);
 
 %clip empty space around plate
 [f c]=find(image);
 image=image(min(f):max(f),min(c):max(c));
-figure;
-imshow(image)
+%figure;
+%imshow(image)
 
 %storage for plate
 plate_text = [];
@@ -25,9 +25,9 @@ plate_text = [];
 %pause(10);
 
 % if CC < 6 (8 met dashes) fail sws
-if (CC < 8)
-    return
-end
+%if (CC < 8)
+%    return
+%end
 
 minr = [];
 maxr = [];
@@ -146,9 +146,9 @@ for n=1:CC
     end
 end
 
-if (length(plate_text) ~= 8)
-   return
-end
+%if (length(plate_text) ~= 8)
+%   return
+%end
 
 end
 

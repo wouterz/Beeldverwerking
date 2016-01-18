@@ -132,7 +132,11 @@ while hasFrame(vid)
     
     str = get(handles.listbox1, 'String');
     
-    
+    %for testing purposes to see what it does write, but not have invalid
+    %matrix in listbox
+    %while(length(chars) < 8)
+    %    chars = [chars '#'];
+    %end
 
     if(length(chars) == 8) 
         if(isempty(str))
