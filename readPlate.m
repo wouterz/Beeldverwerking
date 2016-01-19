@@ -7,7 +7,7 @@ function [ plate_text ] = readPlate( plate, characters )
 threshold = graythresh(plate)+0.1;
 image = ~im2bw(plate, 0.5);
 image = imclearborder(image);
-image = bwareaopen(image,10);
+%image = bwareaopen(image,10);
 %imshow(image)
 %pause(5);
 
@@ -63,7 +63,7 @@ for n=1:CC
     letter_resize=imresize(letter,[51 62]);
     %figure;
     %imshow(letter_resize);
-%     pause(0.5);
+    
     % letter/number image to text
     comp = zeros(1, 32);
     for c=1:32
@@ -73,7 +73,8 @@ for n=1:CC
     end
     %index of max value
     [Y, c] = max(comp);
-    
+    %Y
+    %pause(2);
      if (Y > 0.3)
     if c==1
         letter_t='B';

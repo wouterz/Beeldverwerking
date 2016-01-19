@@ -89,7 +89,7 @@ guidata(hObject,handles)
 
 %Initialize axes1
 axes(handles.axes1);
-image(readFrame(vid));
+image(read(vid, 1));
 
 
 
@@ -110,11 +110,12 @@ vid = handles.vid;
 characters = getRefChars();
 
 index = 0;
-
-while hasFrame(vid)
-
+i = 1;
+frames = vid.NumberOfFrames;
+while (i < frames)
+    
     %Read frame
-    frame = readFrame(vid);
+    frame = read(vid, i);
     
     %Display frame in axes1
     set(h1, 'CData', frame)
@@ -128,7 +129,7 @@ while hasFrame(vid)
     plate = object3D .* frameDouble;
 
     %Character recognition.
-    chars = readPlate(plate, characters);
+    chars = readPlate(plate, characters)
     
     str = get(handles.listbox1, 'String');
     
@@ -148,7 +149,7 @@ while hasFrame(vid)
             set(handles.listbox1, 'Listboxtop', index);
         end
     end
-    
+    i = i+5;
     
 end
 
