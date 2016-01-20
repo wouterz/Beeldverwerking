@@ -89,7 +89,7 @@ guidata(hObject,handles)
 
 %Initialize axes1
 axes(handles.axes1);
-image(readFrame(vid));
+image(read(vid,1));
 
 
 
@@ -112,13 +112,14 @@ characters = getRefChars();
 
 index = 0;
 frameNo = 0;
+totalFrames = vid.NumberOfFrames;
 
-while hasFrame(vid)
-
+while frameNo < totalFrames
+    frameNo = frameNo + 2;
     %Read frame
-    frame = readFrame(vid);
+    frame = read(vid,frameNo);
     
-    frameNo = frameNo + 1;
+    
     
     %Display frame in axes1
     set(h1, 'CData', frame)
