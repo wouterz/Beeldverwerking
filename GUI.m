@@ -100,6 +100,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+tic
 %Get handles
 h1 = get(handles.axes1, 'Children');
 
@@ -110,11 +111,14 @@ vid = handles.vid;
 characters = getRefChars();
 
 index = 0;
+frameNo = 0;
 
 while hasFrame(vid)
 
     %Read frame
     frame = readFrame(vid);
+    
+    frameNo = frameNo + 1;
     
     %Display frame in axes1
     set(h1, 'CData', frame)
@@ -137,20 +141,32 @@ while hasFrame(vid)
     %while(length(chars) < 8)
     %    chars = [chars '#'];
     %end
-
+    
+    charList = {};
+    cellIndex = 1;
+    
     if(length(chars) == 8) 
+%         if(isempty(charList))
+%             charList = {chars};
+%             cellIndex = 2;
+%         elseif()
+            
         if(isempty(str))
             set(handles.listbox1, 'String', chars)
             index = 1;
+            table = {chars, frameNo, toc};
         elseif(str(end) ~= chars) 
             set(handles.listbox1, 'String', [str; chars])
             index = index +1;
-            set(handles.listbox1, 'Listboxtop', index);
+            %set(handles.listbox1, 'Listboxtop', index);
+            table(index, :) = {chars, frameNo, toc};
         end
     end
-    
-    
+
 end
+
+checkSolution(table, 'trainingSolutions.mat');
+assignin('base','table',table)
 
 
 
