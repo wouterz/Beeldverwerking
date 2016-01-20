@@ -112,7 +112,6 @@ characters = getRefChars();
 
 index = 0;
 frameNo = 0;
-strTest = 'AB-CD-EF';
 
 while hasFrame(vid)
 
@@ -134,6 +133,7 @@ while hasFrame(vid)
 
     %Character recognition.
     chars = readPlate(plate, characters);
+    chars = addDashes(chars);
     
     str = get(handles.listbox1, 'String');
     
@@ -156,7 +156,7 @@ while hasFrame(vid)
             set(handles.listbox1, 'String', chars)
             index = 1;
             table = {chars, frameNo, toc};
-        elseif(sum(str(end, :) ~= chars) ~= 0) 
+        elseif(str(end) ~= chars) 
             set(handles.listbox1, 'String', [str; chars])
             index = index +1;
             %set(handles.listbox1, 'Listboxtop', index);
@@ -168,7 +168,6 @@ end
 
 checkSolution(table, 'trainingSolutions.mat');
 assignin('base','table',table)
-assignin('base','strTestOut',strTest)
 
 
 

@@ -133,6 +133,7 @@ while hasFrame(vid)
 
     %Character recognition.
     chars = readPlate(plate, characters);
+    chars = addDashes(chars);
     
     str = get(handles.listbox1, 'String');
     
