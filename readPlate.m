@@ -7,7 +7,8 @@ function [ plate_text ] = readPlate( plate, characters )
 threshold = graythresh(plate)+0.1;
 image = ~im2bw(plate, 0.5);
 image = imclearborder(image);
-image = bwareaopen(image,10);
+image = bwareaopen(image,50);
+%figure;
 %imshow(image)
 %pause(5);
 
@@ -25,44 +26,44 @@ plate_text = [];
 %pause(10);
 
 % if CC < 6 (8 met dashes) fail sws
-%if (CC < 8)
-%    return
-%end
-
-minr = [];
-maxr = [];
-for n=2:CC
-    %get nonzero rows and col (non zero have chars)
-    [r,c] = find(L==n);
-    % get char
-    minr = [minr min(r)];
-    maxr = [maxr max(r)];
+if (CC < 6)
+    return
 end
-min_r = ceil(median(minr));
-max_r = ceil(median(maxr));
+
+% minr = [];
+% maxr = [];
+% for n=2:CC
+%     %get nonzero rows and col (non zero have chars)
+%     [r,c] = find(L==n);
+%     % get char
+%     minr = [minr min(r)];
+%     maxr = [maxr max(r)];
+% end
+% min_r = ceil(median(minr));
+% max_r = ceil(median(maxr));
 
 
 for n=1:CC
     %get nonzero rows and col (non zero have chars)
     [r,c] = find(L==n);
     % get char
-    if (min(r) < min_r)
-        minr = min(r);
-    else
-        minr = min_r;
-    end
-    if (max(r) > max_r)
-        maxr = max(r);
-    else
-        maxr = max_r;
-    end
+%    if (min(r) < min_r)
+%        minr = min(r);
+%    else
+%        minr = min_r;
+%    end
+%    if (max(r) > max_r)
+%        maxr = max(r);
+%    else
+%        maxr = max_r;
+%    end
     
-    letter=image(minr:maxr,min(c):max(c));
+    letter=image(min(r):max(r),min(c):max(c));
     
     % make same size as reference letter
     letter_resize=imresize(letter,[51 62]);
-    %figure;
-    %imshow(letter_resize);
+%     figure;
+%     imshow(letter_resize);
 %     pause(0.5);
     % letter/number image to text
     comp = zeros(1, 32);
@@ -74,7 +75,7 @@ for n=1:CC
     %index of max value
     [Y, c] = max(comp);
     
-     if (Y > 0.3)
+     if (Y > 0.5)
     if c==1
         letter_t='B';
     elseif c==2
@@ -138,17 +139,17 @@ for n=1:CC
         letter_t='9';
     elseif c==31
         letter_t='0';
-    else
-        letter_t='-';
+   % else
+   %     letter_t='-';
     end
     % add letter
     plate_text = [plate_text, letter_t];
     end
 end
 
-%if (length(plate_text) ~= 8)
-%   return
-%end
+% if (length(plate_text) ~= 6)
+%    return
+% end
 
 end
 
