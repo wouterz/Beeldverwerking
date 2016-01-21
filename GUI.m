@@ -113,8 +113,13 @@ characters = getRefChars();
 index = 0;
 frameNo = 0;
 totalFrames = vid.NumberOfFrames;
-
+% thr = [0.3, 0.35, 0.4, 0.45, 0.5];
+thr = [0.3, 0.4, 0.5];
+x = 1;
 while frameNo < totalFrames
+    if (x > 3)
+        x = x-3;
+    end
     frameNo = frameNo + 2;
     %Read frame
     frame = read(vid,frameNo);
@@ -133,7 +138,11 @@ while frameNo < totalFrames
     plate = object3D .* frameDouble;
 
     %Character recognition.
-    chars = readPlate(plate, characters);
+%     t = 0.4;
+%     if (0.3 < 0.5)
+%         t = graythresh(plate)+0.2;
+%     end
+    chars = readPlate(plate, thr(x), characters);
     chars = addDashes(chars);
     
     str = get(handles.listbox1, 'String');
@@ -164,7 +173,29 @@ while frameNo < totalFrames
             table(index, :) = {chars, frameNo, toc};
         end
     end
-
+    
+%     chars = readPlate(plate, 0.5, characters);
+%     chars = addDashes(chars);
+%     
+%     if(length(chars) == 8) 
+% %         if(isempty(charList))
+% %             charList = {chars};
+% %             cellIndex = 2;
+% %         elseif()
+%             
+%         if(isempty(str))
+%             set(handles.listbox1, 'String', chars)
+%             index = 1;
+%             table = {chars, frameNo, toc};
+%         elseif(str(end) ~= chars) 
+%             set(handles.listbox1, 'String', [str; chars])
+%             index = index +1;
+%             %set(handles.listbox1, 'Listboxtop', index);
+%             table(index, :) = {chars, frameNo, toc};
+%         end
+%     end
+% 
+x= x+1;
 end
 
 checkSolution(table, 'trainingSolutions.mat');

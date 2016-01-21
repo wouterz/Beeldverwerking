@@ -110,10 +110,14 @@ vid = VideoReader(file);
 h1 = get(handles.axes1, 'Children');
 h2 = get(handles.axes2, 'Children');
 characters = getRefChars();
-while hasFrame(vid)
+frameNo = 150;
+totalFrames = vid.NumberOfFrames;
+
+while frameNo < totalFrames
+    frameNo = frameNo + 2;
 
     %Read frame
-    frame = readFrame(vid);
+    frame = read(vid, frameNo);
     
     %Display frame in axes1
     set(h1, 'CData', frame)
@@ -126,12 +130,14 @@ while hasFrame(vid)
     object3D = repmat(mask, [1,1,3]);
     frameDouble = im2double(frame);
     plate = object3D .* frameDouble;
-
+    image2 = ~im2bw(plate, 0.4);
+    image2 = imclearborder(image2);
+    image2 = bwareaopen(image2,30);
 
     readPlate(plate, characters)
     
     %Display frame in axes2
-    set(h2, 'CData', plate)
+    set(h2, 'CData', image2*255)
     
     % pause(0.1);
 
