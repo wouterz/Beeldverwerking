@@ -169,10 +169,10 @@ while frameNo < totalFrames
     if(length(chars) == 8) 
 
         %if new plate
-        if(tempIdx == 1)
+        if(isempty(tempList))
             tempList = {chars frameNo};
             tempIdx = 2;
-        elseif(sum(char(tempList(tempIdx-1, 1)) == chars) < 4 || wait > 24 || frameNo >= totalFrames-2)
+        elseif(sum(char(tempList(tempIdx-1, 1)) == chars) < 4 || wait > 24 || frameNo >= totalFrames-1)
 
             %Find the most common string mcs
             [unique_strings, ~, string_map] = unique(tempList(:, 1));
@@ -193,7 +193,7 @@ while frameNo < totalFrames
                 index = index +1;
                 table(index, :) = {mcs, rFrame, toc};
             end
-            tempList = cell(25, 2);
+            tempList = {};
             tempIdx = 1;
             wait = 0;
         else
