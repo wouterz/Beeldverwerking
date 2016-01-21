@@ -1,25 +1,43 @@
-function [ plate_text ] = readPlate( plate, threshold, characters )
+function [ plate_text ] = readPlate( plate, characters )
 %UNTITLED2 Read the characters of numberplate 'plate'
-
+%storage for plate
+plate_text = [];
 %imagesc(plate)
 %TODO: threshold tweaken
 %by trial and error currently 0.5 works okay-ish, dashes still suck
 %threshold2 = graythresh(plate)
-image = ~im2bw(plate, threshold);
-image = imclearborder(image);
-image = bwareaopen(image,30);
+% image = ~im2bw(plate, threshold);
+% image = imclearborder(image);
+% image = bwareaopen(image,30);
 %figure;
 %imshow(image)
 %pause(5);
 
 %clip empty space around plate
-[f c]=find(image);
-image=image(min(f):max(f),min(c):max(c));
+% [f c]=find(image);
+% image=image(min(f):max(f),min(c):max(c));
 %figure;
 %imshow(image)
 
-%storage for plate
-plate_text = [];
+%%
+thres = graythresh(plate);
+image2 = im2bw(plate, thres);
+image2 = imclearborder(image2);
+[f, c]=find(image2);
+
+gray = rgb2gray(plate);
+gray=gray(min(f):max(f),min(c):max(c));
+
+image = zeros(2);
+if (sum(gray(:) == 0))
+    [img, y] = threshold(gray, 'isodata', 3);
+    image = ~im2bw(gray, y(2));
+end
+
+
+%%
+
+
 %amount of letters (connected components) normally 6/8
 [L CC] = bwlabel(image);
 %imagesc(L);
@@ -62,9 +80,9 @@ for n=1:CC
     
     % make same size as reference letter
     letter_resize=imresize(letter,[51 62]);
-%          figure;
-%          imshow(letter_resize);
-%          pause(0.5);
+    %          figure;
+    %          imshow(letter_resize);
+    %          pause(0.5);
     % letter/number image to text
     comp = zeros(1, 33);
     for c=1:33
@@ -75,7 +93,7 @@ for n=1:CC
     %comp
     %index of max value
     [Y, c] = max(comp);
-
+    
     
     if (Y > 0.5)
         if (c==32 || c==33)

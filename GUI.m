@@ -122,13 +122,12 @@ wait = 0;
 rFrame = 1;
 
 totalFrames = vid.NumberOfFrames;
-% thr = [0.3, 0.35, 0.4, 0.45, 0.5];
-thr = [0.3, 0.4, 0.5];
+thr = [0.3, 0.35, 0.4, 0.45, 0.5];
+% thr = [0.3, 0.4, 0.5];
 x = 1;
 while frameNo < totalFrames
-<<<<<<< HEAD
-    if (x > 3)
-        x = x-3;
+    if (x > 5)
+        x = x-5;
     end
     
     frameNo = frameNo + 2;
@@ -154,7 +153,7 @@ while frameNo < totalFrames
 %     if (0.3 < 0.5)
 %         t = graythresh(plate)+0.2;
 %     end
-    chars = readPlate(plate, thr(x), characters);
+    chars = readPlate(plate, characters);
     chars = addDashes(chars);
     
     str = get(handles.listbox1, 'String');
