@@ -27,11 +27,11 @@ function varargout = GUI(varargin)
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @GUI_OpeningFcn, ...
-                   'gui_OutputFcn',  @GUI_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
+    'gui_Singleton',  gui_Singleton, ...
+    'gui_OpeningFcn', @GUI_OpeningFcn, ...
+    'gui_OutputFcn',  @GUI_OutputFcn, ...
+    'gui_LayoutFcn',  [] , ...
+    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
@@ -63,7 +63,7 @@ guidata(hObject, handles);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = GUI_OutputFcn(hObject, eventdata, handles) 
+function varargout = GUI_OutputFcn(hObject, eventdata, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -123,18 +123,18 @@ rFrame = 1;
 
 totalFrames = vid.NumberOfFrames;
 thr = [0.3, 0.35, 0.4, 0.45, 0.5];
-% thr = [0.3, 0.4, 0.5];
+%thr = [0.3, 0.4, 0.5];
 x = 1;
 while frameNo < totalFrames
     if (x > 5)
-        x = x-5;
+        x = 1;
     end
     
     frameNo = frameNo + 2;
     %Read frame
     frame = read(vid, frameNo);
     
-   
+    
     wait = wait + 1;
     
     %Display frame in axes1
@@ -142,41 +142,29 @@ while frameNo < totalFrames
     
     %Sobel
     mask = Sobel(frame);
-  
+    
     %Apply mask
     object3D = repmat(mask, [1,1,3]);
     frameDouble = im2double(frame);
     plate = object3D .* frameDouble;
-
-    %Character recognition.
-%     t = 0.4;
-%     if (0.3 < 0.5)
-%         t = graythresh(plate)+0.2;
-%     end
+    
+    %met isodata
     chars = readPlate(plate, characters);
     chars = addDashes(chars);
     
     str = get(handles.listbox1, 'String');
     
-    %for testing purposes to see what it does write, but not have invalid
-    %matrix in listbox
-    %while(length(chars) < 8)
-    %    chars = [chars '#'];
-    %end
-    
-    
-    
-    if(length(chars) == 8) 
-%         if(isempty(charList))
-%             charList = {chars};
-%             cellIndex = 2;
-%         elseif()
+    if(length(chars) == 8)
+        %         if(isempty(charList))
+        %             charList = {chars};
+        %             cellIndex = 2;
+        %         elseif()
         %if new plate
         if(isempty(tempList))
             tempList = {chars frameNo};
             tempIdx = 2;
         elseif(sum(char(tempList(end, 1)) == chars) < 4 || wait > 40)
-
+            
             %Find the most common string mcs
             [unique_strings, ~, string_map] = unique(tempList(:, 1));
             mcs = unique_strings(mode(string_map));
@@ -186,12 +174,12 @@ while frameNo < totalFrames
             if(~isempty(idx))
                 rFrame = cell2mat(tempList(idx(1), 2));
             end
-                
+            
             if(isempty(str))
                 set(handles.listbox1, 'String', mcs)
                 index = 1;
                 table = {mcs, rFrame, toc};
-            else 
+            else
                 set(handles.listbox1, 'String', [str; mcs])
                 index = index +1;
                 table(index, :) = {mcs, rFrame, toc};
@@ -205,44 +193,69 @@ while frameNo < totalFrames
         end
         
         %         if(isempty(str))
-%             set(handles.listbox1, 'String', chars)
-%             index = 1;
-%             table = {chars, frameNo, toc};
-%         elseif(str(end) ~= chars) 
-%             set(handles.listbox1, 'String', [str; chars])
-%             index = index +1;
-%             %set(handles.listbox1, 'Listboxtop', index);
-%             table(index, :) = {chars, frameNo, toc};
-%         end
+        %             set(handles.listbox1, 'String', chars)
+        %             index = 1;
+        %             table = {chars, frameNo, toc};
+        %         elseif(str(end) ~= chars)
+        %             set(handles.listbox1, 'String', [str; chars])
+        %             index = index +1;
+        %             %set(handles.listbox1, 'Listboxtop', index);
+        %             table(index, :) = {chars, frameNo, toc};
+        %         end
     end
     
-%     chars = readPlate(plate, 0.5, characters);
-%     chars = addDashes(chars);
-%     
-%     if(length(chars) == 8) 
-% %         if(isempty(charList))
-% %             charList = {chars};
-% %             cellIndex = 2;
-% %         elseif()
-%             
-%         if(isempty(str))
-%             set(handles.listbox1, 'String', chars)
-%             index = 1;
-%             table = {chars, frameNo, toc};
-%         elseif(str(end) ~= chars) 
-%             set(handles.listbox1, 'String', [str; chars])
-%             index = index +1;
-%             %set(handles.listbox1, 'Listboxtop', index);
-%             table(index, :) = {chars, frameNo, toc};
-%         end
-%     end
-% 
-x= x+1;
+    %fixed threshold
+    chars = readPlate(plate, characters, thr(x));
+    chars = addDashes(chars);
+    
+    str = get(handles.listbox1, 'String');
+    
+    if(length(chars) == 8)
+        %         if(isempty(charList))
+        %             charList = {chars};
+        %             cellIndex = 2;
+        %         elseif()
+        %if new plate
+        if(isempty(tempList))
+            tempList = {chars frameNo};
+            tempIdx = 2;
+        elseif(sum(char(tempList(end, 1)) == chars) < 4 || wait > 40)
+            
+            %Find the most common string mcs
+            [unique_strings, ~, string_map] = unique(tempList(:, 1));
+            mcs = unique_strings(mode(string_map));
+            
+            %Find first found mcs
+            idx = find(strcmp(tempList(:, 1), mcs));
+            if(~isempty(idx))
+                rFrame = cell2mat(tempList(idx(1), 2));
+            end
+            
+            if(isempty(str))
+                set(handles.listbox1, 'String', mcs)
+                index = 1;
+                table = {mcs, rFrame, toc};
+            else
+                set(handles.listbox1, 'String', [str; mcs])
+                index = index +1;
+                table(index, :) = {mcs, rFrame, toc};
+            end
+            tempList = {};
+            tempIdx = 1;
+            wait = 0;
+        else
+            tempList(tempIdx, :) = {chars, frameNo};
+            tempIdx = tempIdx + 1;
+        end
+        
+        
+    end
+    x = x+1;
 end
-
 assignin('base','table',table)
 assignin('base','raw',raw)
 checkSolution(table, 'trainingSolutions.mat');
+
 
 
 
