@@ -89,7 +89,7 @@ guidata(hObject,handles)
 
 %Initialize axes1
 axes(handles.axes1);
-image(readFrame(vid));
+image(read(vid, 1));
 
 
 
@@ -112,13 +112,23 @@ characters = getRefChars();
 
 index = 0;
 frameNo = 0;
+raw = ['AB-CD-EF'];
 
-while hasFrame(vid)
+tempList = {};
+tempIdx = 1;
+wait = 0;
+rFrame = 1;
 
+totalFrames = vid.NumberOfFrames;
+
+while frameNo < totalFrames
+    frameNo = frameNo + 3;
+    
     %Read frame
-    frame = readFrame(vid);
+    frame = read(vid, frameNo);
     
     frameNo = frameNo + 1;
+    wait = wait + 1;
     
     %Display frame in axes1
     set(h1, 'CData', frame)
@@ -143,31 +153,64 @@ while hasFrame(vid)
     %    chars = [chars '#'];
     %end
     
-    charList = {};
-    cellIndex = 1;
+    
     
     if(length(chars) == 8) 
 %         if(isempty(charList))
 %             charList = {chars};
 %             cellIndex = 2;
 %         elseif()
+        %if new plate
+        if(isempty(tempList))
+            tempList = {chars frameNo};
+            tempIdx = 2;
+        elseif(sum(char(tempList(end, 1)) == chars) < 4 || wait > 40)
+
+            %Find the most common string mcs
+            [unique_strings, ~, string_map] = unique(tempList(:, 1));
+            mcs = unique_strings(mode(string_map));
             
-        if(isempty(str))
-            set(handles.listbox1, 'String', chars)
-            index = 1;
-            table = {chars, frameNo, toc};
-        elseif(str(end) ~= chars) 
-            set(handles.listbox1, 'String', [str; chars])
-            index = index +1;
-            %set(handles.listbox1, 'Listboxtop', index);
-            table(index, :) = {chars, frameNo, toc};
+            %Find first found mcs
+            idx = find(strcmp(tempList(:, 1), mcs));
+            if(~isempty(idx))
+                rFrame = cell2mat(tempList(idx(1), 2));
+            end
+                
+            if(isempty(str))
+                set(handles.listbox1, 'String', mcs)
+                index = 1;
+                table = {mcs, rFrame, toc};
+            else 
+                set(handles.listbox1, 'String', [str; mcs])
+                index = index +1;
+                table(index, :) = {mcs, rFrame, toc};
+            end
+            tempList = {};
+            tempIdx = 1;
+            wait = 0;
+        else
+            tempList(tempIdx, :) = {chars, frameNo};
+            tempIdx = tempIdx + 1;
         end
+        
+        %         if(isempty(str))
+%             set(handles.listbox1, 'String', chars)
+%             index = 1;
+%             table = {chars, frameNo, toc};
+%         elseif(str(end) ~= chars) 
+%             set(handles.listbox1, 'String', [str; chars])
+%             index = index +1;
+%             %set(handles.listbox1, 'Listboxtop', index);
+%             table(index, :) = {chars, frameNo, toc};
+%         end
     end
 
 end
 
-checkSolution(table, 'trainingSolutions.mat');
 assignin('base','table',table)
+assignin('base','raw',raw)
+checkSolution(table, 'trainingSolutions.mat');
+
 
 
 
