@@ -124,12 +124,11 @@ rFrame = 1;
 totalFrames = vid.NumberOfFrames;
 
 while frameNo < totalFrames
-    frameNo = frameNo + 1;
     
     %Read frame
     frame = read(vid, frameNo);
     
-   
+    frameNo = frameNo + 1;
     wait = wait + 1;
     
     %Display frame in axes1
