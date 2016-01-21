@@ -110,7 +110,7 @@ vid = VideoReader(file);
 h1 = get(handles.axes1, 'Children');
 h2 = get(handles.axes2, 'Children');
 characters = getRefChars();
-frameNo = 150;
+frameNo = 0;
 totalFrames = vid.NumberOfFrames;
 
 while frameNo < totalFrames
@@ -130,14 +130,24 @@ while frameNo < totalFrames
     object3D = repmat(mask, [1,1,3]);
     frameDouble = im2double(frame);
     plate = object3D .* frameDouble;
-    image2 = ~im2bw(plate, 0.4);
-    image2 = imclearborder(image2);
-    image2 = bwareaopen(image2,30);
-
-    readPlate(plate, characters)
     
+    thres = graythresh(plate);
+    image2 = im2bw(plate, thres);
+    image2 = imclearborder(image2);
+    [f, c]=find(image2);
+    
+    gray = rgb2gray(plate);
+    gray=gray(min(f):max(f),min(c):max(c));
+    
+    res = zeros(2);
+    if (sum(gray(:) > 0))
+    [img, y] = threshold(gray, 'isodata', 2);
+    res = ~im2bw(gray, y(2));
+    end
+    
+    %readPlate(res, characters)
     %Display frame in axes2
-    set(h2, 'CData', image2*255)
+    set(h2, 'CData', res*255)
     
     % pause(0.1);
 
