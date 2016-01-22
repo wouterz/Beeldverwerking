@@ -124,7 +124,7 @@ totalFrames = vid.NumberOfFrames;
 thr = [0.3, 0.35, 0.4, 0.45, 0.5];
 %thr = [0.3, 0.4, 0.5];
 x = 1;
-while frameNo < totalFrames-2
+while frameNo < totalFrames
     if (x > 5)
         x = 1;
     end
