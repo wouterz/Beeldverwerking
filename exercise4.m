@@ -92,7 +92,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 
 %Read file from ui
 %file = uigetfile;
-file = 'Trainingsvideo.avi';
+file = uigetfile;
 vid = VideoReader(file);
 
 %Initialize axes1
@@ -110,7 +110,7 @@ vid = VideoReader(file);
 h1 = get(handles.axes1, 'Children');
 h2 = get(handles.axes2, 'Children');
 characters = getRefChars();
-frameNo = 0;
+frameNo = 1045;
 totalFrames = vid.NumberOfFrames;
 
 while frameNo < totalFrames

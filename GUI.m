@@ -231,7 +231,7 @@ x = x+1;
 
 end
 assignin('base','table',table)
-checkSolution(table, 'trainingSolutions.mat');
+checkSolution(table, 'beoordelingSolutions.mat');
 
 
 
