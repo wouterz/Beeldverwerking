@@ -51,11 +51,11 @@ res = gray&0;
 n = length(per);
 for i=1:1:n
     %If the perimeter is below the threshold
-    if(double(per(i))/double(area(i)) < 0.1)
+    if(double(per(i))/double(area(i)) < 0.2)
         mm = gray&0 | c == i;
         bb = getfield(regionprops(double(mm), 'BoundingBox'), 'BoundingBox');
         
-        if(double(area(i))/ (bb(2)*bb(3)) < 0.7)
+        if(double(area(i))/ (bb(2)*bb(3)) < 0.85)
             %Add the object to te result
             res = res | c == i;
         end
