@@ -122,6 +122,7 @@ rFrame = 1;
 
 totalFrames = vid.NumberOfFrames;
 thr = [0.3, 0.35, 0.4, 0.45, 0.5];
+% thr = [0.3, 0.35, 0.4, 0.45, 0.5, 0.55];
 %thr = [0.3, 0.4, 0.5];
 x = 1;
 while frameNo < totalFrames-2
@@ -139,8 +140,13 @@ while frameNo < totalFrames-2
     %Display frame in axes1
     set(h1, 'CData', frame)
     
+    maskG = frame(:, :, 1) > 15 + frame(:, :, 2);
+    object3D = repmat(maskG, [1,1,3]);
+    frameDouble = im2double(frame);
+    frameG = object3D .* frameDouble;
+    
     %Sobel
-    mask = Sobel(frame);
+    mask = Sobel(frameG);
     
     %Apply mask
     object3D = repmat(mask, [1,1,3]);
